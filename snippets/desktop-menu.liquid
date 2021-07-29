@@ -1,0 +1,256 @@
+{%- comment -%}
+IMPLEMENTATION NOTE ABOUT MEGA MENUS: in Warehouse, on desktop, we have two different menu styles: one style where the first level is always
+visible, and a second style where the menu is displayed after hitting the "Menu" button.
+
+The mega menu logic is as a consequence quite difference: in the first style, the mega-menu is actually part of the second dropdown menu (as each level
+is displayed as a dropdown). However on the second style, the mega-menu is checked on the first level, as the first menu (which holds the mega-menu) is
+always visible.
+{%- endcomment -%}
+
+{%- assign mega_menus = section.blocks | map: 'settings' | map: 'menu_item' -%}
+
+{%- if section.settings.desktop_navigation_layout == 'condensed' -%}
+  {%- assign is_floating = true -%}
+{%- else -%}
+  {%- assign is_floating = false -%}
+{%- endif -%}
+
+{%- assign is_mega_menu = false -%}
+{%- assign downcase_title = menu.title | downcase | strip -%}
+
+{%- for mega_menu in mega_menus -%}
+  {%- assign mega_menu_setting_downcase = mega_menu | downcase | strip -%}
+
+  {%- if mega_menu_setting_downcase == downcase_title -%}
+    {%- assign is_mega_menu = true -%}
+    {%- break -%}
+  {%- endif -%}
+{%- endfor -%}
+
+{%- if is_floating == false and is_mega_menu -%}
+  {%- render 'mega-menu', is_floating: is_floating, mega_menu: menu, index: index -%}
+{%- else -%}
+  <div id="{{ index }}" class="nav-dropdown e-bike_nav-dropdown {% if is_floating %}nav-dropdown--floating {% if mega_menus.size > 0 %}nav-dropdown--fixed {% endif %}{% elsif menu.levels == 1 %}nav-dropdown--restrict{% endif %}" data-type="menu" aria-hidden="true" role="list">
+  
+    <ul class="nav-dropdown_menu"> {%- if is_floating -%}
+      {%- render 'icon', icon: 'nav-triangle-borderless' -%}
+    {%- endif -%}
+
+  
+    {%- for link in menu.links -%}
+
+      <li class="nav-dropdown__item">
+        <a  href="{{ link.url }}" class="nav-dropdown__link primary-nav_link link">{{ link.title }}{%- render 'icon', icon: 'arrow-right' -%}</a></li></a>
+      </li>
+
+      </li>
+    {%- endfor -%}
+  </ul>
+</div>
+
+{%- endif -%}
+
+
+<style>
+
+
+  .collection-scroll_nav-dropdown[aria-hidden=false]{
+    z-index: 1;
+    visibility: visible;
+    opacity:1;
+    position:relative;
+  }
+
+  .collection-scroll_nav-dropdown[aria-hidden=true]{
+    z-index: -9999;
+    visibility: hidden;
+    opacity:0;
+    right:0;
+    position:absolute;
+}
+
+  .collection-scroll_nav-dropdown{
+    width: calc(100% - 450px);
+    padding:30px;
+    transition:opacity 0.3s;
+  }
+  
+  .collection-scroll_nav-dropdown .flickity-page-dots{
+    display: none;
+  }
+  
+ 
+  .collection-scroll_nav-dropdown .flickity-viewport{
+    overflow: scroll;
+    overflow-y: hidden;
+    padding-bottom: 30px;
+  }
+
+  .collection-scroll_nav-dropdown .flickity-slider{
+    display: flex;
+    transform: translateX(0%);
+  }
+
+  .collection-scroll_nav-dropdown .product-list{
+    background:transparent;
+    margin: 30px 0;
+    margin-left: 30px;
+  }
+
+  .collection-scroll_nav-dropdown .flickity-button{
+    display:none;
+  }
+
+  /* width */
+  .collection-scroll_nav-dropdown .flickity-viewport::-webkit-scrollbar {
+  width: 80%;
+  height:6px;
+}
+
+/* Track */
+.collection-scroll_nav-dropdown .flickity-viewport::-webkit-scrollbar-track {
+  background: #DFDFDF;
+  border-radius: 50px;
+}
+
+/* Handle */
+.collection-scroll_nav-dropdown .flickity-viewport::-webkit-scrollbar-thumb {
+  background: var(--primary-color);
+  border-radius: 50px;
+}
+
+/* Handle */
+.collection-scroll_nav-dropdown .flickity-viewport::-webkit-scrollbar-button{
+  background: #F8F8F8;
+}
+
+
+  .collection-list::after {
+    display: none;
+    content: "flickity"; /* enable Flickity slideshow */
+  }
+  .collection-scroll_nav-dropdown .product-item{
+    width:400px;
+  }
+
+  .carousel-cell {
+  margin-right: 30px;
+}
+
+  .product-item.bike-product.product_navbar {
+    padding: 0;
+    width: 350px;
+    height: 100%;
+    overflow: visible;
+    margin-bottom: 0;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-right:30px;
+    overflow: overlay;
+}
+
+.card {
+    border-radius: 3px;
+    background-color: white;
+    border-color: #F5F5F5;
+    box-shadow: 0 0 12px rgb(0 0 0 / 5%);
+}
+
+  .product-item.bike-product .priduct-item_details {
+    padding: 30px;
+}
+
+.product-item__label-list {
+    position: absolute;
+    top: 30px;
+    left: 30px;
+    z-index: 2;
+    font-size: 0;
+}
+
+  .product-item.bike-product .product-item_features {
+    width: 100%;
+    display: inline-flex;
+    padding-top: 30px;
+    margin-top: 15px;
+    flex-wrap: wrap;
+    border-top: 1px solid #E8E8E8;
+    justify-content: space-between;
+}
+
+.product-item.bike-product .product-item_features .product-item_features-card-list {
+    display: inline-flex;
+    align-items: center;
+    height: fit-content;
+    margin-right: 15px;
+}
+
+.product-item.bike-product .product-item_features .product-item_features-card-list svg {
+    height: 20px;
+    fill: #616161;
+    margin-right: 8px;
+}
+
+.product-item.bike-product .priduct-item_details .product-item__info-inner .product-item__title h3 {
+    font-weight: 600;
+    color: #222021;
+    font-size: 20px;
+    text-transform: none;
+    line-height: 25px;
+}
+
+.product-item.bike-product .product-item__price-list {
+    margin-top: 0px;
+    margin-bottom: 0px;
+    display: inline-flex;
+    align-items: center;
+}
+
+.product-item.bike-product .price--highlight, .product-item.bike-product .price {
+    margin-right: 10px;
+    font-size: 18px!important;
+    color: #616161;
+    font-weight: 500;
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+.product-item .price--compare {
+    font-size: calc(var(--base-text-font-size) - (var(--default-text-font-size) - 14px));
+}
+
+
+.collection-scroll_nav-dropdown .swiper-slide {
+  width: fit-content;
+  height:auto;
+}
+
+.collection-scroll_nav-dropdown .product-item.bike-product.product_navbar {
+  margin-right: 0;
+}
+
+.collection-scroll_nav-dropdown .swiper-container{
+  width: 100%;
+}
+
+.collection-scroll_nav-dropdown .swiper-wrapper{
+  padding-bottom: 30px;
+}
+
+.swiper-container-horizontal>.swiper-scrollbar{
+  position: absolute;
+    left: 0%;
+    bottom: 0px;
+    width:100%;
+    background: #DFDFDF;
+}
+
+.swiper-scrollbar-drag {
+    background: var(--primary-color);
+}
+</style>
+
+
+

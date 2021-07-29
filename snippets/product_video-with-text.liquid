@@ -1,0 +1,51 @@
+<section class="section video" data-section-id="{{ section.id }}" data-section-type="{{ section.id }}" style="background-color:{{ block.settings.bg_color }}">
+    <div class="section-video_item">
+  
+    {%- capture video_link -%}
+    {%- if block.settings.video_link -%}
+    {%- assign video_yt_link = "https://www.youtube.com/embed/" | append: block.settings.video_link.id -%}
+    <iframe width="100%" height="100%" frameborder="0" allowfullscreen src={{video_yt_link}}></iframe>
+    {%- endif -%}
+    </div>
+    {%- endcapture -%}
+  
+    {%- capture text -%}
+    {%- if block.settings.video_position == 'left' -%}
+    <div class="content align-l">
+      {%- else -%}
+      <div class="content align-r">
+        {%- endif -%}
+        {%- if block.settings.title != blank -%}
+        <h1 class="primary">{{ block.settings.title | escape }}</h1>
+        {%- endif -%}
+  
+        {{ block.settings.content }}
+  
+        {% if block.settings.button_choice %}
+        <a href="{{ block.settings.link }}" class="btn">{{ block.settings.button_text | escape }}</a>
+        {%- endif -%}
+    </div>
+    {%- endcapture -%}
+  
+  
+      {%- if block.settings.video_position == 'right' -%}
+      <div class="right">
+        <div class="video-with-text">
+          {{ video_link }}
+          <div class="container">
+            {{ text }}
+          </div>
+        </div>
+      </div>
+      {%-else-%}
+  
+      <div class="video-with-text">
+        {{ video_link }}
+        <div class="container">
+          {{ text }}
+        </div>
+      </div>
+  
+      {%- endif -%}
+</section>
+  

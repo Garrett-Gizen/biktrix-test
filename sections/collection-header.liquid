@@ -1,0 +1,127 @@
+{% if collection.image %}
+    <section class="{{ section.id }} main-banner" style="background-image:url('{{ collection.image | img_url: 'master' }}')"​​​​​​​>
+      {% endif %}
+
+  <div class="container">
+    <div class="content light">
+        <h1 class="primary"> {{collection.title}}</h1>
+      
+      <p> {{collection.description}}</p>
+      {% if block.settings.button_choice %}
+         <a href="{{ block.settings.link }}" class="btn prim-dark">{{ block.settings.button_text | escape }}</a>
+      {% endif %}
+     
+    </div>
+  </div>
+</section>
+
+{% schema %}
+  {
+    "name": "Collection Banner",
+    "settings": [
+      {
+          "type": "header",
+          "content": "Button"
+        },
+
+    {
+        "type": "checkbox",
+        "id": "button_choice",
+        "label": "Want A Button?",
+        "default": true
+      },
+
+       {
+          "type": "text",
+          "id": "button_text",
+          "label": "Text",
+          "default": "Read More"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        },
+                    {
+          "type": "header",
+          "content": "Background Image"
+        },
+            {
+
+          "type": "image_picker",
+          "id": "image",
+          "label": "Select Image"
+    }
+  ]
+}
+{% endschema %}
+
+
+<style>    
+
+
+  .main-banner {
+    width: 100%;
+      height: 100%;
+      background-repeat: no-repeat;
+      background-size: cover;
+      position: relative;
+      display: flex;
+      align-items: center;
+      flex-direction: row;
+      background-position-y: center;
+      z-index: 1;
+      padding: 12% 0;
+  }
+  
+  
+  
+  .main-banner::after{
+      content: "";
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      background:hsl(0deg 0% 0% / 80%);
+      z-index: -1;
+  }
+  
+  .main-banner h1{
+  line-height: 30px;
+  }
+  
+  .main-banner .content{
+    width:100%;
+    word-break: break-word;
+  }
+  
+  .main-banner .content h1{
+    font-size:32px;
+  }
+  
+  
+  
+  @media screen and (max-width: 999px) {
+    .main-banner .content{
+      width:100%;
+    }
+  }
+  
+  @media screen and (max-width: 640px) {
+    .main-banner{
+      height:auto;
+      padding:20% 0;
+      background-position-x: center;
+  
+    }
+  
+    .main-banner::after{
+      background:hsl(0deg 0% 0% / 80%);
+    }
+  
+    .main-banner .content p, .main-banner .content h1,{
+      line-height:45px;
+    }
+  }
+  </style>
